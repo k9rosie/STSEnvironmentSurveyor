@@ -1,0 +1,11 @@
+{
+  "modid": "stses",
+  "name": "STSEnvironmentSurveyor",
+  "author_list": ["k9rosie"],
+  "credits": "BaseMod, ModTheSpire, k9rosie",
+  "description": "mod for allowing RNN to survey the environment",
+  "version": "1.0",
+  "sts_version": "12-22-2020",
+  "mts_version": "3.22.0",
+  "dependencies": ["basemod"]
+}
