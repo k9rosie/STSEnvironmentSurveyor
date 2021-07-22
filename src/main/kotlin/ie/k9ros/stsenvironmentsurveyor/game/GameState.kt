@@ -52,4 +52,3 @@ fun getGameState(): GameState = GameState(
     getHardCardSelection(AbstractDungeon.handCardSelectScreen),
     getBoxedMapArray(AbstractDungeon.map)
 )
-

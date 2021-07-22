@@ -41,4 +41,3 @@ fun getEventOption(option: LargeDialogOptionButton?) =
 fun boundedEventOptionArray(content: ArrayList<LargeDialogOptionButton?>?, maxSize: Int = 4) = bounded(maxSize, EventOption(), content) { getEventOption(it) }
 @JvmName("boundedEventOptionArray1")
 fun boundedEventOptionArray(content: ArrayList<AbstractCampfireOption?>?, maxSize: Int = 5) = bounded(maxSize, EventOption(), content) { getEventOption(it) }
-

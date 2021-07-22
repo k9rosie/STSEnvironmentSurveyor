@@ -31,4 +31,3 @@ fun getBoxedMapArray(map: ArrayList<ArrayList<MapRoomNode?>?>?, height: Int = 16
             }
         }
     } ?: bounded(15, bounded(7, MapNode()))
-
