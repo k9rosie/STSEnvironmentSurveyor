@@ -51,7 +51,7 @@ class Surveyor : ISubscriber {
                 (elitesSlain * 0.1) +
                 ((totalPlayerDealtDamage * 0.01) - (totalPlayerTakenDamage * 0.01)) +
                 (invalidCommands * -0.01) +
-                    (proceeds * 0.01)
+                (proceeds * 0.01)
         }
     }
 
