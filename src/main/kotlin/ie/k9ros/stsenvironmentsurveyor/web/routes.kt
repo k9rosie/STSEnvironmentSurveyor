@@ -18,14 +18,15 @@ import kotlinx.coroutines.delay
 
 suspend fun executeCommand(command: String): Boolean {
     return try {
-        Surveyor.logger.info("Command: $command")
         if (CommandExecutor.executeCommand(command)) {
             GameStateListener.registerCommandExecution()
+            Surveyor.logger.info("Command: $command")
         }
 
         while (!GameStateListener.isWaitingForCommand()) {
             delay(1)
         }
+
         true
     } catch (e: InvalidCommandException) {
         Surveyor.logger.info("Invalid command: $command")
@@ -41,11 +42,6 @@ fun Route.gameRoute() {
         }
         post {
             val action = call.receive<ActionRequest>()
-            action.command.split(" ").getOrNull(0)?.let {
-                if (it == "end" || it == "proceed") {
-                    Surveyor.proceeds++
-                }
-            }
             executeCommand(action.command)
             call.respond(StateResponse(Surveyor.getScore(), getGameState()))
         }

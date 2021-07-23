@@ -22,7 +22,6 @@ class Surveyor : ISubscriber {
         var totalPlayerTakenDamage = 0
         var totalPlayerDealtDamage = 0
         var invalidCommands = 0
-        var proceeds = 0
 
         lateinit var serverConfig: ServerConfiguration
         lateinit var server: WebServer
@@ -44,14 +43,12 @@ class Surveyor : ISubscriber {
             val monstersSlain = CardCrawlGame.monstersSlain
             val elitesSlain = CardCrawlGame.elites1Slain + CardCrawlGame.elites2Slain + CardCrawlGame.elites3Slain
 
-            return (currentFloor * 0.1) +
-                ((currentAct - 1)) +
+            return ((currentFloor + ((currentAct - 1) * 16)) * 1) +
                 (accumulatedGold * 0.01) +
                 (monstersSlain * 0.1) +
                 (elitesSlain * 0.1) +
                 ((totalPlayerDealtDamage * 0.01) - (totalPlayerTakenDamage * 0.01)) +
-                (invalidCommands * -0.01) +
-                (proceeds * 0.01)
+                (invalidCommands * -0.001)
         }
     }
 
