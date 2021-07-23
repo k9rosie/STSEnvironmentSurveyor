@@ -17,7 +17,6 @@ class WebServer(hostname: String = "0.0.0.0", port: Int = 8008) {
         }
         routing {
             gameRoute()
-            scoreRoute()
         }
     }
 

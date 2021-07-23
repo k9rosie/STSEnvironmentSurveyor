@@ -27,7 +27,7 @@ dependencies {
     shadow(files("run/ModTheSpire.jar"))
     shadow(files("run/desktop-1.0.jar"))
     shadow(files("run/mods/BaseMod.jar"))
-    // shadow(files("run/mods/CommunicationMod.jar"))
+    shadow(files("run/mods/CommunicationMod.jar"))
     implementation(kotlin("stdlib"))
 }
 

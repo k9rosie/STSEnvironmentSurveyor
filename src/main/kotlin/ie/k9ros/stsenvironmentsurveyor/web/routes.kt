@@ -1,6 +1,10 @@
 package ie.k9ros.stsenvironmentsurveyor.web
 
-import com.megacrit.cardcrawl.core.Settings
+import com.megacrit.cardcrawl.core.CardCrawlGame
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon
+import communicationmod.CommandExecutor
+import communicationmod.GameStateListener
+import communicationmod.InvalidCommandException
 import ie.k9ros.stsenvironmentsurveyor.Surveyor
 import ie.k9ros.stsenvironmentsurveyor.game.getGameState
 import io.ktor.application.call
@@ -12,52 +16,51 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import kotlinx.coroutines.delay
 
-fun Route.gameRoute() {
-    route("/game") {
-        get {
-            val gameState = getGameState()
-            call.respond(gameState)
+suspend fun executeCommand(command: String): Boolean {
+    return try {
+        Surveyor.logger.info("Command: $command")
+        if (CommandExecutor.executeCommand(command)) {
+            GameStateListener.registerCommandExecution()
         }
-        post {
-            val body = call.receive<ControllerInputsRequest>()
-            Settings.isControllerMode = true
-            body.inputs.forEach {
-                if (it != 69) {
-                    Settings.isControllerMode = true
-                    Surveyor.webController.pressedButtons.add(it)
-                    Surveyor.webController.notifyListenersButtonDown(it)
-                    delay(20)
-                    Surveyor.webController.notifyListenersButtonUp(it)
-                    Surveyor.webController.pressedButtons.remove(it)
-                    delay(20)
-                }
-            }
 
-            call.respond(Surveyor.getScore())
+        while (!GameStateListener.isWaitingForCommand()) {
+            delay(1)
         }
-        // post("/action") {
-        //     val body = call.receive<ActionRequest>()
-        //     var response = SuccessResponse(true)
-        //     try {
-        //         if (body.command == "choose") print(ChoiceScreenUtils.getCurrentChoiceList())
-        //         CommandExecutor.executeCommand(body.command)
-        //     } catch (e: InvalidCommandException) {
-        //         response = SuccessResponse(false, e.toString())
-        //     }
-
-        //     call.respond(response)
-        // }
-        post("/reset") {
-            Surveyor.newRun = true
-            call.respond(SuccessResponse(true))
-        }
+        true
+    } catch (e: InvalidCommandException) {
+        Surveyor.logger.info("Invalid command: $command")
+        Surveyor.invalidCommands++
+        false
     }
 }
 
-fun Route.scoreRoute() {
-    route("/score") {
+fun Route.gameRoute() {
+    route("/game") {
         get {
-            call.respond(Surveyor.getScore())
+            call.respond(StateResponse(Surveyor.getScore(), getGameState()))
+        }
+        post {
+            val action = call.receive<ActionRequest>()
+            action.command.split(" ").getOrNull(0)?.let {
+                if (it == "end" || it == "proceed") {
+                    Surveyor.proceeds++
+                }
+            }
+            executeCommand(action.command)
+            call.respond(StateResponse(Surveyor.getScore(), getGameState()))
+        }
+        post("/reset") {
+            if (CommandExecutor.isInDungeon()) {
+                AbstractDungeon.getCurrRoom().clearEvent()
+                AbstractDungeon.closeCurrentScreen()
+                CardCrawlGame.startOver()
+                delay(4500)
+            }
+            Surveyor.totalPlayerTakenDamage = 0
+            Surveyor.totalPlayerDealtDamage = 0
+            Surveyor.invalidCommands = 0
+            executeCommand("start ironclad 0 ${Surveyor.seeds.random()}")
+            call.respond(StateResponse(Surveyor.getScore(), getGameState()))
         }
     }
 }
