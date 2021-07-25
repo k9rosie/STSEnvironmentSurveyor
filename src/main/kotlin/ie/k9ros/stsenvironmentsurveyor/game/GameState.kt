@@ -5,22 +5,23 @@ import com.megacrit.cardcrawl.rooms.RestRoom
 import com.megacrit.cardcrawl.screens.GameOverScreen
 import ie.k9ros.stsenvironmentsurveyor.utils.bounded
 import ie.k9ros.stsenvironmentsurveyor.utils.hashed
-import ie.k9ros.stsenvironmentsurveyor.utils.toInt
+import ie.k9ros.stsenvironmentsurveyor.utils.normalize
+import ie.k9ros.stsenvironmentsurveyor.utils.toDouble
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GameState(
-    val currentScreen: Int = -1,
-    val actionPhase: Int = -1,
-    val currentAction: Int = -1,
-    val floor: Int = -1,
-    val act: Int = -1,
-    val actBoss: Int = -1,
-    val ascension: Int = -1,
-    val isAscension: Int = -1,
-    val isInGame: Int = -1,
-    val isVictory: Int = -1,
-    val isGameOver: Int = -1,
+    val currentScreen: Double = -1.0,
+    val actionPhase: Double = -1.0,
+    val currentAction: Double = -1.0,
+    val floor: Double = -1.0,
+    val act: Double = -1.0,
+    val actBoss: Double = -1.0,
+    val ascension: Double = -1.0,
+    val isAscension: Double = -1.0,
+    val isInGame: Double = -1.0,
+    val isVictory: Double = -1.0,
+    val isGameOver: Double = -1.0,
     val player: Player = Player(),
     val room: Room = Room(),
     val shop: Shop = Shop(),
@@ -32,17 +33,17 @@ data class GameState(
 )
 
 fun getGameState(): GameState = GameState(
-    AbstractDungeon.screen?.ordinal ?: -1,
-    AbstractDungeon.actionManager?.phase?.ordinal ?: -1,
-    AbstractDungeon.actionManager?.currentAction?.actionType?.ordinal ?: -1,
-    AbstractDungeon.floorNum,
-    AbstractDungeon.actNum,
-    AbstractDungeon.ascensionLevel,
+    normalize(AbstractDungeon.screen?.ordinal ?: -1),
+    normalize(AbstractDungeon.actionManager?.phase?.ordinal ?: -1),
+    normalize(AbstractDungeon.actionManager?.currentAction?.actionType?.ordinal ?: -1),
+    normalize(AbstractDungeon.floorNum),
+    normalize(AbstractDungeon.actNum),
+    normalize(AbstractDungeon.ascensionLevel),
     hashed(AbstractDungeon.bossKey),
-    toInt(AbstractDungeon.isAscensionMode),
-    toInt(AbstractDungeon.isPlayerInDungeon()),
-    toInt(GameOverScreen.isVictory),
-    toInt(GameOverScreen.isVictory || (AbstractDungeon.player?.isDead ?: false)),
+    toDouble(AbstractDungeon.isAscensionMode),
+    toDouble(AbstractDungeon.isPlayerInDungeon()),
+    toDouble(GameOverScreen.isVictory),
+    toDouble(GameOverScreen.isVictory || (AbstractDungeon.player?.isDead ?: false)),
     getPlayer(AbstractDungeon.player),
     getRoom(AbstractDungeon.currMapNode?.room),
     getShop(AbstractDungeon.shopScreen),

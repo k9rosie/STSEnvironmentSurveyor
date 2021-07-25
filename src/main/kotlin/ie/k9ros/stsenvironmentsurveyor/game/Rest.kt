@@ -5,14 +5,14 @@ import com.megacrit.cardcrawl.rooms.CampfireUI
 import com.megacrit.cardcrawl.rooms.RestRoom
 import com.megacrit.cardcrawl.ui.campfire.AbstractCampfireOption
 import ie.k9ros.stsenvironmentsurveyor.utils.bounded
-import ie.k9ros.stsenvironmentsurveyor.utils.toInt
+import ie.k9ros.stsenvironmentsurveyor.utils.toDouble
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Rest(
     val options: List<EventOption> = bounded(5, EventOption()),
-    val isRested: Int = -1,
-    val blankSpace: Int = 1
+    val isRested: Double = -1.0,
+    val blankSpace: Double = 1.0
 )
 
 fun getRest(rest: RestRoom?) = rest?.let {
@@ -25,8 +25,8 @@ fun getRest(rest: RestRoom?) = rest?.let {
         }?.toCollection(ArrayList())
         Rest(
             boundedEventOptionArray(buttons),
-            toInt(rest.phase == AbstractRoom.RoomPhase.COMPLETE),
-            0
+            toDouble(rest.phase == AbstractRoom.RoomPhase.COMPLETE),
+            0.0
         )
     } ?: Rest()
 } ?: Rest()

@@ -4,15 +4,16 @@ import com.megacrit.cardcrawl.ui.buttons.LargeDialogOptionButton
 import com.megacrit.cardcrawl.ui.campfire.AbstractCampfireOption
 import ie.k9ros.stsenvironmentsurveyor.utils.bounded
 import ie.k9ros.stsenvironmentsurveyor.utils.hashed
-import ie.k9ros.stsenvironmentsurveyor.utils.toInt
+import ie.k9ros.stsenvironmentsurveyor.utils.normalize
+import ie.k9ros.stsenvironmentsurveyor.utils.toDouble
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class EventOption(
-    val text: Int = -1,
-    val index: Int = -1,
-    val isDisabled: Int = -1,
-    val blankSpace: Int = 1,
+    val text: Double = -1.0,
+    val index: Double = -1.0,
+    val isDisabled: Double = -1.0,
+    val blankSpace: Double = 1.0,
 )
 
 fun getEventOption(option: AbstractCampfireOption?) =
@@ -22,9 +23,9 @@ fun getEventOption(option: AbstractCampfireOption?) =
         val label = labelField.get(option) as String?
         EventOption(
             hashed(label),
-            0,
-            toInt(!option.usable),
-            0
+            0.0,
+            toDouble(!option.usable),
+            0.0
         )
     } ?: EventOption()
 
@@ -32,9 +33,9 @@ fun getEventOption(option: LargeDialogOptionButton?) =
     option?.let {
         EventOption(
             hashed(it.msg),
-            it.slot,
-            toInt(it.isDisabled),
-            0
+            normalize(it.slot),
+            toDouble(it.isDisabled),
+            0.0
         )
     } ?: EventOption()
 

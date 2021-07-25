@@ -3,27 +3,28 @@ package ie.k9ros.stsenvironmentsurveyor.game
 import com.megacrit.cardcrawl.relics.AbstractRelic
 import ie.k9ros.stsenvironmentsurveyor.utils.bounded
 import ie.k9ros.stsenvironmentsurveyor.utils.hashed
-import ie.k9ros.stsenvironmentsurveyor.utils.toInt
+import ie.k9ros.stsenvironmentsurveyor.utils.normalize
+import ie.k9ros.stsenvironmentsurveyor.utils.toDouble
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Relic(
-    val id: Int = -1,
-    val price: Int = -1,
-    val counter: Int = -1,
-    val tier: Int = -1,
-    val isObtained: Int = -1,
-    val blankSpace: Int = 1
+    val id: Double = -1.0,
+    val price: Double = -1.0,
+    val counter: Double = -1.0,
+    val tier: Double = -1.0,
+    val isObtained: Double = -1.0,
+    val blankSpace: Double = .0,
 )
 
 fun getRelic(relic: AbstractRelic?) = relic?.let {
     Relic(
         hashed(it.relicId),
-        it.price,
-        it.counter,
-        it.tier?.ordinal ?: -1,
-        toInt(it.isObtained),
-        0
+        normalize(it.price),
+        normalize(it.counter),
+        normalize(it.tier?.ordinal ?: -1),
+        toDouble(it.isObtained),
+        0.0
     )
 } ?: Relic()
 

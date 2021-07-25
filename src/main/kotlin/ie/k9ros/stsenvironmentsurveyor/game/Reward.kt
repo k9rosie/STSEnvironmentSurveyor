@@ -3,29 +3,30 @@ package ie.k9ros.stsenvironmentsurveyor.game
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.rewards.RewardItem
 import ie.k9ros.stsenvironmentsurveyor.utils.bounded
-import ie.k9ros.stsenvironmentsurveyor.utils.toInt
+import ie.k9ros.stsenvironmentsurveyor.utils.normalize
+import ie.k9ros.stsenvironmentsurveyor.utils.toDouble
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Reward(
-    val type: Int = -1,
-    val gold: Int = -1,
+    val type: Double = -1.0,
+    val gold: Double = -1.0,
     val relic: Relic = Relic(),
     val potion: Potion = Potion(),
-    val isDoneChoosing: Int = -1,
+    val isDoneChoosing: Double = -1.0,
     val cards: List<Card> = bounded(3, Card()),
-    val blankSpace: Int = 1
+    val blankSpace: Double = 1.0
 )
 
 fun getReward(reward: RewardItem?) = reward?.let {
     Reward(
-        it.type?.ordinal ?: -1,
-        it.goldAmt + it.bonusGold,
+        normalize(it.type?.ordinal ?: -1),
+        normalize(it.goldAmt + it.bonusGold),
         getRelic(it.relic),
         getPotion(it.potion),
-        toInt(it.isDone),
+        toDouble(it.isDone),
         boundedCardArray(it.cards, 3),
-        0
+        0.0
     )
 } ?: Reward()
 

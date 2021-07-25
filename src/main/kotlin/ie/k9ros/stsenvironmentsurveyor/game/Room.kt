@@ -4,29 +4,30 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.rooms.AbstractRoom
 import ie.k9ros.stsenvironmentsurveyor.utils.bounded
 import ie.k9ros.stsenvironmentsurveyor.utils.hashed
-import ie.k9ros.stsenvironmentsurveyor.utils.toInt
+import ie.k9ros.stsenvironmentsurveyor.utils.normalize
+import ie.k9ros.stsenvironmentsurveyor.utils.toDouble
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Room(
-    val phase: Int = -1,
-    val type: Int = -1,
+    val phase: Double = -1.0,
+    val type: Double = -1.0,
     val event: Event = Event(),
-    val isBattleOver: Int = -1,
-    val isCombatEvent: Int = -1,
+    val isBattleOver: Double = -1.0,
+    val isCombatEvent: Double = -1.0,
     val rewards: List<Reward> = bounded(10, Reward()),
     val bossRelicRewards: List<Relic> = bounded(3, Relic()),
     val monsters: List<Monster> = bounded(10, Monster()),
-    val blankSpace: Int = 1,
+    val blankSpace: Double = 1.0,
 )
 
 fun getRoom(room: AbstractRoom?) = room?.let {
     Room(
-        room.phase?.ordinal ?: -1,
+        normalize(room.phase?.ordinal ?: -1),
         hashed(room.javaClass.simpleName),
         getEvent(room.event),
-        toInt(room.isBattleOver),
-        toInt(room.combatEvent),
+        toDouble(room.isBattleOver),
+        toDouble(room.combatEvent),
         boundedRewardArray(
             if (AbstractDungeon.combatRewardScreen?.rewards?.size == 0)
                 room.rewards
@@ -34,6 +35,6 @@ fun getRoom(room: AbstractRoom?) = room?.let {
         ),
         boundedRelicArray(AbstractDungeon.bossRelicScreen?.relics, 3),
         boundedMonsterArray(room.monsters?.monsters),
-        0
+        0.0
     )
 } ?: Room()

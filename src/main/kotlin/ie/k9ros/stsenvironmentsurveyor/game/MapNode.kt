@@ -3,22 +3,23 @@ package ie.k9ros.stsenvironmentsurveyor.game
 import com.megacrit.cardcrawl.map.MapRoomNode
 import ie.k9ros.stsenvironmentsurveyor.utils.bounded
 import ie.k9ros.stsenvironmentsurveyor.utils.hashed
+import ie.k9ros.stsenvironmentsurveyor.utils.normalize
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class MapNode(
-    val x: Int = -1,
-    val y: Int = -1,
-    val icon: Int = -1,
-    val blankSpace: Int = 1,
+    val x: Double = -1.0,
+    val y: Double = -1.0,
+    val icon: Double = -1.0,
+    val blankSpace: Double = 1.0,
 )
 
 fun getMapNode(mapNode: MapRoomNode?) = mapNode?.let {
     MapNode(
-        mapNode.x,
-        mapNode.y,
+        normalize(mapNode.x),
+        normalize(mapNode.y),
         hashed(mapNode.getRoomSymbol(true)),
-        0
+        0.0
     )
 } ?: MapNode()
 

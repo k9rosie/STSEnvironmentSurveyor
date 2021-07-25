@@ -4,13 +4,14 @@ import com.megacrit.cardcrawl.shop.ShopScreen
 import com.megacrit.cardcrawl.shop.StorePotion
 import com.megacrit.cardcrawl.shop.StoreRelic
 import ie.k9ros.stsenvironmentsurveyor.utils.bounded
-import ie.k9ros.stsenvironmentsurveyor.utils.toInt
+import ie.k9ros.stsenvironmentsurveyor.utils.normalize
+import ie.k9ros.stsenvironmentsurveyor.utils.toDouble
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Shop(
-    val purgeCost: Int = -1,
-    val isPurgeAvailable: Int = -1,
+    val purgeCost: Double = -1.0,
+    val isPurgeAvailable: Double = -1.0,
     val cards: List<Card> = bounded(7, Card()),
     val relics: List<Relic> = bounded(3, Relic()),
     val potions: List<Potion> = bounded(3, Potion()),
@@ -32,8 +33,8 @@ fun getShop(shop: ShopScreen?) = shop?.let {
         }
     }?.toCollection(ArrayList())
     Shop(
-        ShopScreen.actualPurgeCost,
-        toInt(it.purgeAvailable),
+        normalize(ShopScreen.actualPurgeCost),
+        toDouble(it.purgeAvailable),
         boundedCardArray(ArrayList(it.coloredCards + it.colorlessCards), 7),
         boundedRelicArray(relics, 3),
         boundedPotionArray(potions, 3)
