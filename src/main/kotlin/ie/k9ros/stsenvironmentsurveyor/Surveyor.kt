@@ -2,12 +2,9 @@ package ie.k9ros.stsenvironmentsurveyor
 
 import basemod.BaseMod
 import basemod.interfaces.ISubscriber
-import basemod.interfaces.PreUpdateSubscriber
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer
 import com.megacrit.cardcrawl.core.CardCrawlGame
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
-import communicationmod.GameStateListener
-import ie.k9ros.stsenvironmentsurveyor.web.ServerConfiguration
 import ie.k9ros.stsenvironmentsurveyor.web.WebServer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -25,7 +22,9 @@ class Surveyor : ISubscriber {
         var totalPlayerDealtDamage = 0
         var invalidCommands = 0
 
-        lateinit var serverConfig: ServerConfiguration
+        var hostname = System.getenv("SURVEYOR_HOSTNAME") ?: "0.0.0.0"
+        var port = Integer.parseInt(System.getenv("SURVEYOR_PORT") ?: "8008")
+
         lateinit var server: WebServer
 
         var seeds = arrayOf(
@@ -55,15 +54,7 @@ class Surveyor : ISubscriber {
     }
 
     init {
-        serverConfig = try {
-            val fileConfig = File("config.json")
-            Json.decodeFromString(fileConfig.readText())
-        } catch (e: IOException) {
-            logger.warn("Exception: $e")
-            ServerConfiguration("0.0.0.0", 8008)
-        }
-
-        server = WebServer(serverConfig.hostname, serverConfig.port)
+        server = WebServer(hostname, port)
 
         BaseMod.subscribe(this)
     }

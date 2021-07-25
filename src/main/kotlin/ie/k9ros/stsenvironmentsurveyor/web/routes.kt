@@ -35,9 +35,6 @@ suspend fun executeCommand(command: String): Boolean {
         Surveyor.logger.info("Invalid command: $command")
         Surveyor.invalidCommands++
         false
-    } catch (e: Exception) {
-        Surveyor.logger.error("Exception caught while trying to execute command: $e")
-        false
     }
 }
 
@@ -54,8 +51,8 @@ fun Route.gameRoute() {
                     executeCommand(action.command)
                     return@withTimeout call.respond(StateResponse(Surveyor.getScore(), getGameState()))
                 }
-            } catch (e: TimeoutCancellationException) {
-                Surveyor.logger.error("Error executing command ${action.command}: Timeout after 8 seconds")
+            } catch (e: Exception) {
+                Surveyor.logger.error("Error executing command ${action.command}: $e")
                 return@post call.respond(StateResponse(Surveyor.getScore(), getGameState()))
             }
         }
