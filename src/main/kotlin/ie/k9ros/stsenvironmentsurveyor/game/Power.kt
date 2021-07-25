@@ -21,4 +21,4 @@ fun getPower(power: AbstractPower?) = power?.let {
     )
 } ?: Power()
 
-fun boundedPowerArray(content: ArrayList<AbstractPower?>?, maxSize: Int = 10) = bounded(maxSize, Power(), content) { getPower(it) }
+fun boundedPowerArray(content: ArrayList<AbstractPower?>?, maxSize: Int) = bounded(maxSize, Power(), content) { getPower(it) }

@@ -24,7 +24,7 @@ fun getMapNode(mapNode: MapRoomNode?) = mapNode?.let {
 } ?: MapNode()
 
 // 15 x 7
-fun getBoxedMapArray(map: ArrayList<ArrayList<MapRoomNode?>?>?, height: Int = 16, width: Int = 8): List<List<MapNode>> =
+fun getBoxedMapArray(map: ArrayList<ArrayList<MapRoomNode?>?>?, height: Int, width: Int): List<List<MapNode>> =
     map?.let {
         bounded(height, bounded(width, MapNode()), it) { floor ->
             bounded(width, MapNode(), floor) { node ->

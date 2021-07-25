@@ -18,8 +18,8 @@ data class Event(
 fun getEvent(event: AbstractEvent?) = event?.let {
     Event(
         normalize(AbstractEvent.type?.ordinal ?: -1),
-        boundedEventOptionArray(RoomEventDialog.optionList),
-        boundedEventOptionArray(it.imageEventText.optionList),
+        boundedEventOptionArray(RoomEventDialog.optionList, 4),
+        boundedEventOptionArray(it.imageEventText.optionList, 4),
         bounded(10, -1.0, it.optionsSelected) { opt -> opt.toDouble() },
         0.0
     )

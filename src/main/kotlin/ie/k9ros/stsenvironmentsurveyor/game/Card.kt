@@ -82,4 +82,4 @@ fun getCard(card: AbstractCard?) = card?.let {
     )
 } ?: Card()
 
-fun boundedCardArray(content: ArrayList<AbstractCard?>?, maxSize: Int = 50) = bounded(maxSize, Card(), content) { getCard(it) }
+fun boundedCardArray(content: ArrayList<AbstractCard?>?, maxSize: Int) = bounded(maxSize, Card(), content) { getCard(it) }

@@ -24,7 +24,7 @@ fun getRest(rest: RestRoom?) = rest?.let {
             (button as AbstractCampfireOption?)
         }?.toCollection(ArrayList())
         Rest(
-            boundedEventOptionArray(buttons),
+            boundedEventOptionArray(buttons, 5),
             toDouble(rest.phase == AbstractRoom.RoomPhase.COMPLETE),
             0.0
         )

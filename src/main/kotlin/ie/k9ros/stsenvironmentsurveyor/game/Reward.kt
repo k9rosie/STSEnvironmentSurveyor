@@ -1,6 +1,5 @@
 package ie.k9ros.stsenvironmentsurveyor.game
 
-import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import com.megacrit.cardcrawl.rewards.RewardItem
 import ie.k9ros.stsenvironmentsurveyor.utils.bounded
 import ie.k9ros.stsenvironmentsurveyor.utils.normalize
@@ -30,6 +29,4 @@ fun getReward(reward: RewardItem?) = reward?.let {
     )
 } ?: Reward()
 
-fun boundedRewardArray(content: ArrayList<RewardItem?>?, maxSize: Int = 10) = bounded(maxSize, Reward(), content) { getReward(it) }
-
-fun getRewards() = AbstractDungeon.combatRewardScreen?.rewards?.let { boundedRewardArray(it) } ?: bounded(10, Reward())
+fun boundedRewardArray(content: ArrayList<RewardItem?>?, maxSize: Int) = bounded(maxSize, Reward(), content) { getReward(it) }

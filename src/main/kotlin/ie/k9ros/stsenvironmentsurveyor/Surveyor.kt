@@ -1,7 +1,7 @@
 package ie.k9ros.stsenvironmentsurveyor
 
 import basemod.BaseMod
-import basemod.interfaces.ISubscriber
+import basemod.interfaces.PostInitializeSubscriber
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer
 import com.megacrit.cardcrawl.core.CardCrawlGame
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 @SpireInitializer
-class Surveyor : ISubscriber {
+class Surveyor : PostInitializeSubscriber {
     companion object {
         var logger: Logger = LogManager.getLogger(Surveyor::class)
         // score things
@@ -50,8 +50,10 @@ class Surveyor : ISubscriber {
     }
 
     init {
-        server = WebServer(hostname, port)
-
         BaseMod.subscribe(this)
+    }
+
+    override fun receivePostInitialize() {
+        server = WebServer(hostname, port)
     }
 }

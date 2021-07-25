@@ -17,8 +17,6 @@ data class GameState(
     val floor: Double = -1.0,
     val act: Double = -1.0,
     val actBoss: Double = -1.0,
-    val ascension: Double = -1.0,
-    val isAscension: Double = -1.0,
     val isInGame: Double = -1.0,
     val isVictory: Double = -1.0,
     val isGameOver: Double = -1.0,
@@ -29,7 +27,7 @@ data class GameState(
     val currentMapNode: MapNode = MapNode(),
     val cardGrid: CardGrid = CardGrid(),
     val handCardSelection: HandCardSelection = HandCardSelection(),
-    val map: List<List<MapNode>> = bounded(16, bounded(8, MapNode())),
+    val map: List<List<MapNode>> = bounded(15, bounded(7, MapNode())),
 )
 
 fun getGameState(): GameState = GameState(
@@ -38,9 +36,7 @@ fun getGameState(): GameState = GameState(
     normalize(AbstractDungeon.actionManager?.currentAction?.actionType?.ordinal ?: -1),
     normalize(AbstractDungeon.floorNum),
     normalize(AbstractDungeon.actNum),
-    normalize(AbstractDungeon.ascensionLevel),
     hashed(AbstractDungeon.bossKey),
-    toDouble(AbstractDungeon.isAscensionMode),
     toDouble(AbstractDungeon.isPlayerInDungeon()),
     toDouble(GameOverScreen.isVictory),
     toDouble(GameOverScreen.isVictory || (AbstractDungeon.player?.isDead ?: false)),
@@ -51,5 +47,5 @@ fun getGameState(): GameState = GameState(
     getMapNode(AbstractDungeon.currMapNode),
     getCardGrid(AbstractDungeon.gridSelectScreen),
     getHardCardSelection(AbstractDungeon.handCardSelectScreen),
-    getBoxedMapArray(AbstractDungeon.map)
+    getBoxedMapArray(AbstractDungeon.map, 15, 7)
 )

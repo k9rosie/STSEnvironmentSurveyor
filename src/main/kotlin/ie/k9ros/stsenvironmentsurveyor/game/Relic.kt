@@ -28,4 +28,4 @@ fun getRelic(relic: AbstractRelic?) = relic?.let {
     )
 } ?: Relic()
 
-fun boundedRelicArray(content: ArrayList<AbstractRelic?>?, maxSize: Int = 30) = bounded(maxSize, Relic(), content) { getRelic(it) }
+fun boundedRelicArray(content: ArrayList<AbstractRelic?>?, maxSize: Int) = bounded(maxSize, Relic(), content) { getRelic(it) }

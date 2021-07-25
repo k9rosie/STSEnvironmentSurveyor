@@ -31,10 +31,11 @@ fun getRoom(room: AbstractRoom?) = room?.let {
         boundedRewardArray(
             if (AbstractDungeon.combatRewardScreen?.rewards?.size == 0)
                 room.rewards
-            else AbstractDungeon.combatRewardScreen.rewards
+            else AbstractDungeon.combatRewardScreen.rewards,
+            10
         ),
         boundedRelicArray(AbstractDungeon.bossRelicScreen?.relics, 3),
-        boundedMonsterArray(room.monsters?.monsters),
+        boundedMonsterArray(room.monsters?.monsters, 10),
         0.0
     )
 } ?: Room()

@@ -28,4 +28,4 @@ fun getPotion(potion: AbstractPotion?) = potion?.let {
     )
 } ?: Potion()
 
-fun boundedPotionArray(content: ArrayList<AbstractPotion?>?, maxSize: Int = 5) = bounded(maxSize, Potion(), content) { getPotion(it) }
+fun boundedPotionArray(content: ArrayList<AbstractPotion?>?, maxSize: Int) = bounded(maxSize, Potion(), content) { getPotion(it) }

@@ -37,8 +37,8 @@ fun getMonster(monster: AbstractMonster?) = monster?.let {
         toDouble(it.escapeNext),
         toDouble(it.isDying),
         toDouble(it.isDead),
-        boundedPowerArray(it.powers)
+        boundedPowerArray(it.powers, 10)
     )
 } ?: Monster()
 
-fun boundedMonsterArray(content: ArrayList<AbstractMonster?>?, maxSize: Int = 10) = bounded(maxSize, Monster(), content) { getMonster(it) }
+fun boundedMonsterArray(content: ArrayList<AbstractMonster?>?, maxSize: Int) = bounded(maxSize, Monster(), content) { getMonster(it) }
