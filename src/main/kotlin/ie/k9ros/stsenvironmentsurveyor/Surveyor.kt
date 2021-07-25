@@ -6,12 +6,8 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer
 import com.megacrit.cardcrawl.core.CardCrawlGame
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
 import ie.k9ros.stsenvironmentsurveyor.web.WebServer
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import java.io.File
-import java.io.IOException
 
 @SpireInitializer
 class Surveyor : ISubscriber {
