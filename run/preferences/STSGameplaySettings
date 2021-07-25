@@ -10,7 +10,7 @@
   "Long-press Enabled": "false",
   "Screen Shake": "true",
   "Playtester Art": "false",
-  "Controller Enabled": "true",
+  "Controller Enabled": "false",
   "Touchscreen Enabled": "false",
   "LANGUAGE": "ENG",
   "Ascension Mode Default": "false"

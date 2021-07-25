@@ -1,9 +1,9 @@
 {
   "alias": "i6apbowd461gwceb",
   "name": "AITheSpire",
-  "DEFECT_WIN": "true",
-  "THE_SILENT_WIN": "true",
-  "IRONCLAD_WIN": "true",
+  "DEFECT_WIN": "false",
+  "THE_SILENT_WIN": "false",
+  "IRONCLAD_WIN": "false",
   "DMG_DEALT": "772",
   "IRONCLAD_SPIRITS": "0",
   "NOTE_CARD": "Defend_R",

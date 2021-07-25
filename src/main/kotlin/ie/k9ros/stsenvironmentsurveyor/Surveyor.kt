@@ -2,9 +2,11 @@ package ie.k9ros.stsenvironmentsurveyor
 
 import basemod.BaseMod
 import basemod.interfaces.ISubscriber
+import basemod.interfaces.PreUpdateSubscriber
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer
 import com.megacrit.cardcrawl.core.CardCrawlGame
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
+import communicationmod.GameStateListener
 import ie.k9ros.stsenvironmentsurveyor.web.ServerConfiguration
 import ie.k9ros.stsenvironmentsurveyor.web.WebServer
 import kotlinx.serialization.decodeFromString

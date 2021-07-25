@@ -14,23 +14,29 @@ import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withTimeout
 
 suspend fun executeCommand(command: String): Boolean {
+    Surveyor.logger.info("Current screen: ${AbstractDungeon.screen}")
+
     return try {
+        Surveyor.logger.info("Command: $command")
         if (CommandExecutor.executeCommand(command)) {
             GameStateListener.registerCommandExecution()
-            Surveyor.logger.info("Command: $command")
-        }
-
-        while (!GameStateListener.isWaitingForCommand()) {
-            delay(1)
+            while (!GameStateListener.isWaitingForCommand()) {
+                delay(1)
+            }
         }
 
         true
     } catch (e: InvalidCommandException) {
         Surveyor.logger.info("Invalid command: $command")
         Surveyor.invalidCommands++
+        false
+    } catch (e: Exception) {
+        Surveyor.logger.error("Exception caught while trying to execute command: $e")
         false
     }
 }
@@ -42,8 +48,16 @@ fun Route.gameRoute() {
         }
         post {
             val action = call.receive<ActionRequest>()
-            executeCommand(action.command)
-            call.respond(StateResponse(Surveyor.getScore(), getGameState()))
+
+            return@post try {
+                withTimeout(8000L) {
+                    executeCommand(action.command)
+                    return@withTimeout call.respond(StateResponse(Surveyor.getScore(), getGameState()))
+                }
+            } catch (e: TimeoutCancellationException) {
+                Surveyor.logger.error("Error executing command ${action.command}: Timeout after 8 seconds")
+                return@post call.respond(StateResponse(Surveyor.getScore(), getGameState()))
+            }
         }
         post("/reset") {
             if (CommandExecutor.isInDungeon()) {

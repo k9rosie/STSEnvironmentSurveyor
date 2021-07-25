@@ -3,7 +3,7 @@
   "Blocked Damage": "false",
   "Hand Confirmation": "false",
   "Upload Data": "true",
-  "Particle Effects": "false",
+  "Particle Effects": "true",
   "Fast Mode": "true",
   "Show Card keys": "false",
   "Bigger Text": "false",
@@ -13,5 +13,5 @@
   "Controller Enabled": "true",
   "Touchscreen Enabled": "false",
   "LANGUAGE": "ENG",
-  "Ascension Mode Default": "false"
+  "Ascension Mode Default": "true"
 }
