@@ -14,27 +14,65 @@ import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
+import kotlin.concurrent.thread
 
-suspend fun executeCommand(command: String): Boolean {
-    Surveyor.logger.info("Current screen: ${AbstractDungeon.screen}")
+class CommandExecuteJob(private val command: String) {
+    var finished = false
+    var invalidCommand = false
+    private var thread: Thread? = null
 
-    return try {
-        Surveyor.logger.info("Command: $command")
-        if (CommandExecutor.executeCommand(command)) {
-            GameStateListener.registerCommandExecution()
-            while (!GameStateListener.isWaitingForCommand()) {
+    // runs in the context of the main thread
+    fun execute() {
+        try {
+            if (CommandExecutor.executeCommand(command)) {
+                GameStateListener.registerCommandExecution()
+                // fire coroutine to wait for this command to finish executing
+                thread = thread {
+                    runBlocking {
+                        launch(Dispatchers.Default) {
+                            wait()
+                        }
+                    }
+                }
+            } else {
+                finished = true
+            }
+        } catch (e: InvalidCommandException) {
+            Surveyor.logger.error("Error executing command $command: $e")
+            invalidCommand = true
+            finished = true
+        }
+    }
+
+    private suspend fun wait() {
+        while (!GameStateListener.isWaitingForCommand()) {
+            delay(1)
+        }
+        finished = true
+    }
+}
+
+suspend fun executeCommand(command: String) {
+    val commandJob = CommandExecuteJob(command)
+    Surveyor.commandJobs.push(commandJob)
+
+    try {
+        withTimeout(8000L) {
+            while (!commandJob.finished) {
                 delay(1)
             }
         }
-
-        true
-    } catch (e: InvalidCommandException) {
-        Surveyor.logger.info("Invalid command: $command")
-        Surveyor.invalidCommands++
-        false
+    } catch (e: TimeoutCancellationException) {
+        Surveyor.logger.error("Error executing command $command: $e")
     }
+
+    if (commandJob.invalidCommand) Surveyor.invalidCommands++
 }
 
 fun Route.gameRoute() {
@@ -44,16 +82,8 @@ fun Route.gameRoute() {
         }
         post {
             val action = call.receive<ActionRequest>()
-
-            return@post try {
-                withTimeout(8000L) {
-                    executeCommand(action.command)
-                    return@withTimeout call.respond(StateResponse(Surveyor.getScore(), getGameState()))
-                }
-            } catch (e: Exception) {
-                Surveyor.logger.error("Error executing command ${action.command}: $e")
-                return@post call.respond(StateResponse(Surveyor.getScore(), getGameState()))
-            }
+            executeCommand(action.command)
+            call.respond(StateResponse(Surveyor.getScore(), getGameState()))
         }
         post("/reset") {
             if (CommandExecutor.isInDungeon()) {

@@ -2,15 +2,18 @@ package ie.k9ros.stsenvironmentsurveyor
 
 import basemod.BaseMod
 import basemod.interfaces.PostInitializeSubscriber
+import basemod.interfaces.PreUpdateSubscriber
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer
 import com.megacrit.cardcrawl.core.CardCrawlGame
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
+import ie.k9ros.stsenvironmentsurveyor.web.CommandExecuteJob
 import ie.k9ros.stsenvironmentsurveyor.web.WebServer
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import java.util.LinkedList
 
 @SpireInitializer
-class Surveyor : PostInitializeSubscriber {
+class Surveyor : PostInitializeSubscriber, PreUpdateSubscriber {
     companion object {
         var logger: Logger = LogManager.getLogger(Surveyor::class)
         // score things
@@ -22,6 +25,8 @@ class Surveyor : PostInitializeSubscriber {
         var port = Integer.parseInt(System.getenv("SURVEYOR_PORT") ?: "8008")
 
         lateinit var server: WebServer
+
+        var commandJobs = LinkedList<CommandExecuteJob>()
 
         var seeds = arrayOf(
             "the", "history", "of", "all", "hitherto", "existing", "societies", "is",
@@ -55,5 +60,11 @@ class Surveyor : PostInitializeSubscriber {
 
     override fun receivePostInitialize() {
         server = WebServer(hostname, port)
+    }
+
+    override fun receivePreUpdate() {
+        if (commandJobs.size > 0) {
+            commandJobs.pop().execute()
+        }
     }
 }
