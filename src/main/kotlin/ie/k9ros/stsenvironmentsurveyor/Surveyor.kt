@@ -6,6 +6,7 @@ import basemod.interfaces.PreUpdateSubscriber
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer
 import com.megacrit.cardcrawl.core.CardCrawlGame
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon
+import ie.k9ros.stsenvironmentsurveyor.game.getGameState
 import ie.k9ros.stsenvironmentsurveyor.web.CommandExecuteJob
 import ie.k9ros.stsenvironmentsurveyor.web.WebServer
 import org.apache.logging.log4j.LogManager
@@ -44,13 +45,15 @@ class Surveyor : PostInitializeSubscriber, PreUpdateSubscriber {
             val accumulatedGold = CardCrawlGame.goldGained
             val monstersSlain = CardCrawlGame.monstersSlain
             val elitesSlain = CardCrawlGame.elites1Slain + CardCrawlGame.elites2Slain + CardCrawlGame.elites3Slain
+            val isLoss = if (getGameState().isGameOver.toInt() == 1 && getGameState().isVictory.toInt() == 0) -1 else 0
+            val yaryardaze = if (getGameState().isGameOver.toInt() == 1 && getGameState().isVictory.toInt() == 1) 1 else 0 // winning
 
             return ((currentFloor + ((currentAct - 1) * 16)) * 1) +
                 (accumulatedGold * 0.01) +
                 (monstersSlain * 0.1) +
                 (elitesSlain * 0.1) +
                 ((totalPlayerDealtDamage * 0.01) - (totalPlayerTakenDamage * 0.01)) +
-                (invalidCommands * -0.001)
+                (invalidCommands * -0.001) + isLoss + yaryardaze
         }
     }
 
