@@ -44,7 +44,7 @@ class CommandExecuteJob(private val command: String) {
                 finished = true
             }
         } catch (e: InvalidCommandException) {
-            Surveyor.logger.error("Error executing command $command: $e")
+            Surveyor.logger.error("Invalid command: $command")
             invalidCommand = true
             finished = true
         }

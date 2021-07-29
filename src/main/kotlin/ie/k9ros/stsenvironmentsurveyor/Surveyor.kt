@@ -30,8 +30,8 @@ class Surveyor : PostInitializeSubscriber, PreUpdateSubscriber {
         var commandJobs = LinkedList<CommandExecuteJob>()
 
         var seeds = arrayOf(
-            "the", "history", "of", "all", "hitherto", "existing", "societies", "is",
-            "class", "struggle"
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+            "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"
         )
 
         @JvmStatic

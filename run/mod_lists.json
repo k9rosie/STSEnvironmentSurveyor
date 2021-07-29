@@ -4,7 +4,8 @@
     "\u003cDefault\u003e": [
       "BaseMod.jar",
       "STSEnvironmentSurveyor-1.0-SNAPSHOT-all.jar",
-      "CommunicationMod.jar"
+      "CommunicationMod.jar",
+      "SuperFastMode.jar"
     ]
   }
 }
